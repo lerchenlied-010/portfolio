@@ -11,7 +11,7 @@ export const profile = {
     'Welcome to my portfolio. I build AI systems, web applications and automations that save people time. Take a look around, and get in touch if you would like to work together.',
   email: 'rastafarisarzona2@gmail.com',
   linkedin: 'https://linkedin.com/in/rastafari-sarzona',
-  github: 'https://github.com/sarzonarastafarikhaliel',
+  github: 'https://github.com/lerchenlied-010',
   // Set to '/cv.pdf' once the file is in public/. Empty hides every CV link so nothing 404s.
   cv: '',
 }

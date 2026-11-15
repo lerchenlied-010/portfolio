@@ -74,4 +74,4 @@ Vercel detects the Vite setup on its own, so no configuration file is needed.
 
 - Email: [rastafarisarzona2@gmail.com](mailto:rastafarisarzona2@gmail.com)
 - LinkedIn: [linkedin.com/in/rastafari-sarzona](https://linkedin.com/in/rastafari-sarzona)
-- GitHub: [github.com/sarzonarastafarikhaliel](https://github.com/sarzonarastafarikhaliel)
+- GitHub: [github.com/lerchenlied-010](https://github.com/lerchenlied-010)
