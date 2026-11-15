@@ -30,6 +30,7 @@ type Pose = { pos: V3; look: V3; off: number; offP: number; posP?: V3 }
 const POSES: Record<StopId, Pose> = {
   desk: { pos: [0.2, 1.36, 1.56], look: [0.16, 0, 0.1], off: -0.17, offP: -0.5, posP: [0.12, 3.3, 1.5] },
   bantay: { pos: [0.42, 0.6, 0.58], look: [0.3, 0.07, -0.2], off: 0.2, offP: 0.1, posP: [0.42, 1.2, 1.05] },
+  tanaw: { pos: [-0.2, 0.5, 0.45], look: [-0.3, 0, 0.1], off: 0.2, offP: 0.12, posP: [-0.22, 1.05, 0.62] },
   laredo: { pos: [0.12, 0.62, 0.3], look: [-0.04, 0, -0.26], off: 0.2, offP: 0.12, posP: [0.1, 1.15, 0.5] },
   brewview: { pos: [0.5, 0.42, 0.18], look: [0.6, 0.06, -0.3], off: 0.2, offP: 0.12, posP: [0.55, 0.95, 0.35] },
   skills: { pos: [0.48, 0.42, 0.74], look: [0.58, 0.05, 0.3], off: 0.2, offP: 0.24, posP: [0.5, 0.78, 1.0] },
@@ -381,6 +382,45 @@ function CoffeeBag({ m }: { m: Mats }) {
       <Text font={fontUrl} fontSize={0.0052} color="#4d5258" anchorX="center" anchorY="middle" position={[0, 0.047, d / 2 + 0.0016]} letterSpacing={0.06}>
         COFFEE REVIEWS
       </Text>
+    </group>
+  )
+}
+
+// Phone lying face up, its screen showing the TANAW result card: orange header, a big peso figure, two cause bars.
+function Phone({ m }: { m: Mats }) {
+  const w = 0.078
+  const l = 0.16
+  const flat = [-Math.PI / 2, 0, 0] as const
+  const y = 0.0085
+  return (
+    <group>
+      <RoundedBox args={[w, 0.008, l]} radius={0.003} smoothness={4} position={[0, 0.004, 0]} material={m.ink} castShadow receiveShadow />
+      <mesh position={[0, y, 0]} rotation={flat} material={m.paper}>
+        <planeGeometry args={[w - 0.008, l - 0.012]} />
+      </mesh>
+      <mesh position={[0, y + 0.0002, -l / 2 + 0.0235]} rotation={flat}>
+        <planeGeometry args={[w - 0.008, 0.032]} />
+        <meshBasicMaterial color="#f26522" />
+      </mesh>
+      <Text font={nameFontUrl} fontSize={0.0105} color="#111111" anchorX="left" anchorY="middle" rotation={flat} position={[-w / 2 + 0.008, y + 0.0004, -l / 2 + 0.0235]}>
+        TANAW
+      </Text>
+      <Text font={nameFontUrl} fontSize={0.0125} color={C.ink} anchorX="left" anchorY="middle" rotation={flat} position={[-w / 2 + 0.008, y + 0.0004, -0.03]}>
+        {'+475'}
+      </Text>
+      <mesh position={[-0.0045, y + 0.0002, -0.012]} rotation={flat}>
+        <planeGeometry args={[0.052, 0.006]} />
+        <meshBasicMaterial color="#1f86e6" />
+      </mesh>
+      <mesh position={[0.0285, y + 0.0002, -0.012]} rotation={flat}>
+        <planeGeometry args={[0.009, 0.006]} />
+        <meshBasicMaterial color="#26a69a" />
+      </mesh>
+      {[0.004, 0.016, 0.028].map((z, i) => (
+        <mesh key={i} position={[-0.006 - i * 0.004, y + 0.0002, z + 0.012]} rotation={flat} material={m.ink}>
+          <planeGeometry args={[0.048 - i * 0.008, 0.0014]} />
+        </mesh>
+      ))}
     </group>
   )
 }
@@ -826,6 +866,9 @@ function Desk({ active, onSelect, reducedMotion }: { active: number; onSelect: (
       <group position={[0, 0.005, 0]}>
         <Hotspot id="bantay" active={is('bantay')} onSelect={onSelect} position={[0.3, 0, -0.22]} rotation={[0, -0.14, 0]}>
           <Laptop m={m} />
+        </Hotspot>
+        <Hotspot id="tanaw" active={is('tanaw')} onSelect={onSelect} position={[-0.3, 0, 0.1]} rotation={[0, 0.4, 0]}>
+          <Phone m={m} />
         </Hotspot>
         <Hotspot id="laredo" active={is('laredo')} onSelect={onSelect} position={[-0.04, 0, -0.26]} rotation={[0, 0.2, 0]}>
           <Newspaper m={m} />

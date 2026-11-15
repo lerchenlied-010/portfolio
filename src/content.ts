@@ -48,6 +48,23 @@ export const projects: Project[] = [
     team: 'With Jonnard Enzo Santos, Art Elvin Miranda and De Andre Antonio Williams · Adviser Dr. Joey S. Aviles · Built for Barangay Anunas, Angeles City',
   },
   {
+    id: 'tanaw',
+    name: 'TANAW',
+    title: 'Explaining, in pesos, why a Meralco bill changed',
+    period: 'Hackathon · Meralco IDOL 2026 · Team Stiletto',
+    summary:
+      'A Meralco bill gives you a total, not a reason. TANAW reads the PDF statement on the phone, checks the bill against its own arithmetic, and splits the change from last month into pesos: Meralco’s published rates, the weather, and how much power you used. If the numbers do not add up, it helps you send a dispute that staff can triage.',
+    stack: ['JavaScript', 'PWA', 'pdf.js', 'Node.js', 'Capacitor', 'Ollama', 'Qwen 2.5', 'PaddleOCR', 'Open-Meteo API'],
+    shots: [
+      { src: '/projects/tanaw/explain.png', width: 780, height: 1688, alt: 'TANAW result screen: your bill rose ₱475, split into using more electricity (+₱391) and Meralco’s rates (+₱84)', caption: 'Why the bill changed, in pesos.' },
+      { src: '/projects/tanaw/check.png', width: 780, height: 1688, alt: 'TANAW check screen with two of four self-checks failed after a charge was changed by ₱500', caption: 'The bill is checked against its own numbers.' },
+      { src: '/projects/tanaw/dispute.png', width: 780, height: 1688, alt: 'TANAW lists three strong flags and a ready-made message to Meralco', caption: 'A planted error becomes a ready-made dispute.' },
+      { src: '/projects/tanaw/dashboard.png', width: 1440, height: 900, alt: 'TANAW staff dashboard listing one strong-evidence dispute case', caption: 'The staff triage dashboard (a concept, not connected to Meralco).' },
+    ],
+    team: 'Meralco IDOL Hackathon 2026, Challenge 2: Know Your Bill, Manage Your Usage · Screenshots use a SYNTHETIC sample bill priced at real Meralco rates',
+    link: { href: 'https://github.com/msmeralco/TeamStiletto', label: 'View the code on GitHub' },
+  },
+  {
     id: 'laredo',
     name: '24/7 Laredo',
     title: 'A local news website that updates itself',
@@ -106,6 +123,7 @@ export const skills = [
 export const stops = [
   { id: 'desk', label: 'Desk' },
   { id: 'bantay', label: 'BANTAY' },
+  { id: 'tanaw', label: 'TANAW' },
   { id: 'laredo', label: '24/7 Laredo' },
   { id: 'brewview', label: 'BrewView' },
   { id: 'skills', label: 'Skills' },
