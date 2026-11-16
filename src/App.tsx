@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { profile, projects, skills, stops, type Project } from './content'
 
 const Scene = lazy(() => import('./Scene'))
@@ -31,39 +31,62 @@ export function goTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' })
 }
 
+// Shared class strings. Each is used in more than one place below.
+const frameHover = 'hover:shadow-[inset_0_0_0_1px_var(--color-white)]'
+const section =
+  'relative z-1 grid min-h-svh px-(--gutter) pointer-events-none compact:grid-cols-[minmax(0,1fr)] compact:items-start simple:mx-auto simple:block simple:min-h-0 simple:max-w-[46rem] simple:py-6'
+const stopSection = `${section} grid-cols-[1fr_minmax(0,36rem)] items-center pt-26 pb-[12vh] compact:pt-[56svh] compact:pb-[12svh]`
+// Reading panel: black, framed with the poster's hairline.
+const sheet =
+  'sheet pointer-events-auto col-start-2 bg-panel p-[clamp(1.5rem,3vw,2.75rem)] text-white shadow-[inset_0_0_0_1px_var(--color-line),0_20px_40px_-12px_rgb(0_0_0/0.7)] compact:col-start-1'
+const h2 = 'font-display text-[length:clamp(2rem,3.4vw,3rem)] leading-[0.95] tracking-[-0.02em] uppercase'
+const h3 = 'text-lg leading-[1.3] font-semibold'
+const tags = 'flex flex-wrap gap-1.5'
+
 function ProjectSheet({ p }: { p: Project }) {
   return (
-    <article className="sheet project">
-      <h2>{p.name}</h2>
-      <p className="sub">{p.title}</p>
-      <p className="meta">{p.period}</p>
-      <p className="summary">{p.summary}</p>
+    <article className={sheet}>
+      <h2 className={h2}>{p.name}</h2>
+      <p className="mt-2 text-lg font-medium">{p.title}</p>
+      <p className="mt-[0.6rem] text-sm text-muted">{p.period}</p>
+      <p className="mt-5 text-[1.0625rem]">{p.summary}</p>
 
-      <h3>Stack</h3>
-      <ul className="tags" aria-label="Stack">
+      <h3 className={`${h3} mt-9`}>Stack</h3>
+      <ul className={`${tags} mt-3`} aria-label="Stack">
         {p.stack.map((s) => (
-          <li key={s}>{s}</li>
+          <li key={s} className="frame px-[0.55rem] py-[0.4rem] text-[0.6875rem]">
+            {s}
+          </li>
         ))}
       </ul>
 
-      <h3>Screens</h3>
-      <div className="shots">
+      <h3 className={`${h3} mt-9`}>Screens</h3>
+      {/* Phone-shaped shots sit side by side (two or three a row); wide shots take the full row. */}
+      <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(min(8.5rem,100%),1fr))] items-start gap-x-4 gap-y-6">
         {p.shots.map((s) => (
-          <figure key={s.src} className={s.height > s.width ? 'portrait' : undefined}>
-            <a href={s.src} target="_blank" rel="noreferrer" aria-label={`Open full size: ${s.caption}`}>
-              <img src={s.src} alt={s.alt} width={s.width} height={s.height} loading="lazy" decoding="async" />
+          <figure key={s.src} className={s.height > s.width ? undefined : 'col-span-full'}>
+            <a href={s.src} target="_blank" rel="noreferrer" aria-label={`Open full size: ${s.caption}`} className="group block rounded-[2px]">
+              <img
+                src={s.src}
+                alt={s.alt}
+                width={s.width}
+                height={s.height}
+                loading="lazy"
+                decoding="async"
+                className="block h-auto w-full rounded-[2px] bg-[#f2f2f2] shadow-[0_0_0_1px_var(--color-line)] transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-0.5 group-hover:shadow-[0_0_0_1px_var(--color-white)]"
+              />
             </a>
-            <figcaption>{s.caption}</figcaption>
+            <figcaption className="mt-2 text-[0.8125rem] leading-[1.4] text-muted">{s.caption}</figcaption>
           </figure>
         ))}
       </div>
 
       {p.link && (
-        <a className="btn project-link" href={p.link.href} target="_blank" rel="noreferrer">
+        <a className="btn mt-8" href={p.link.href} target="_blank" rel="noreferrer">
           {p.link.label}
         </a>
       )}
-      {p.team && <p className="meta team">{p.team}</p>}
+      {p.team && <p className="mt-5 text-sm text-muted">{p.team}</p>}
     </article>
   )
 }
@@ -111,78 +134,118 @@ export default function App() {
         </Suspense>
       )}
 
-      <header className="bar">
-        <a className="mark" href="#desk">
+      {/* Black shade so sheets scrolling underneath never collide with the bar. */}
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-2 flex items-center gap-6 bg-linear-to-b from-black/92 from-58% to-black/0 px-(--gutter) pt-[1.1rem] pb-7 *:pointer-events-auto">
+        <a className="mr-auto font-bold tracking-[-0.01em] no-underline" href="#desk">
           {profile.short}
         </a>
-        <nav aria-label="Tour stops" className="rail">
+        {/* On phones the rail becomes a scrollable strip along the bottom edge, faded where more stops wait. */}
+        <nav
+          aria-label="Tour stops"
+          className="flex gap-1.5 simple:hidden compact:fixed compact:inset-x-0 compact:top-auto compact:bottom-0 compact:overflow-x-auto compact:bg-black compact:px-(--gutter) compact:pt-3 compact:pb-[max(0.75rem,env(safe-area-inset-bottom))] compact:shadow-[0_-1px_0_rgb(244_244_244/0.12)] compact:[mask-image:linear-gradient(to_right,#000_82%,transparent)] compact:[scrollbar-width:none]"
+        >
           {stops.map((s, i) => (
-            <a key={s.id} href={`#${s.id}`} className="stop" aria-current={i === active ? 'true' : undefined}>
-              <span className="stop-n">{String(i + 1).padStart(2, '0')}</span> {s.label}
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              className={`group frame ${frameHover} aria-[current=true]:bg-white aria-[current=true]:text-black aria-[current=true]:shadow-none compact:flex-none`}
+              aria-current={i === active ? 'true' : undefined}
+            >
+              <span className="tabular-nums opacity-60 group-aria-[current=true]:text-accent group-aria-[current=true]:opacity-100">
+                {String(i + 1).padStart(2, '0')}
+              </span>{' '}
+              {s.label}
             </a>
           ))}
         </nav>
-        <div className="bar-actions">
-          <button type="button" className="link" onClick={() => setSimple(!simple)} aria-pressed={simple}>
+        <div className="flex gap-1.5">
+          <button type="button" className={`frame ${frameHover}`} onClick={() => setSimple(!simple)} aria-pressed={simple}>
             {simple ? 'Desk view' : 'Simple view'}
           </button>
           {profile.cv && (
-            <a className="link" href={profile.cv} download>
+            <a className={`frame ${frameHover}`} href={profile.cv} download>
               CV
             </a>
           )}
         </div>
       </header>
 
-      {/* From the first project on; on the desk stop the name already heads the page. */}
+      {/* Poster date stack, bottom left: the stop number in red over its year and name.
+          From the first project on; on the desk stop the name already heads the page. Phones give this edge to the rail. */}
       {!simple && active > 0 && (
-        <p className="stamp" aria-hidden="true">
-          <span className="stamp-n">{String(active + 1).padStart(2, '0')}</span>
+        <p
+          className="pointer-events-none fixed bottom-[clamp(1.25rem,4vh,2.5rem)] left-(--gutter) z-1 flex flex-col font-display text-[length:clamp(2.25rem,4.8vw,4.5rem)] leading-[0.9] tracking-[-0.02em] uppercase compact:hidden"
+          aria-hidden="true"
+        >
+          <span className="text-accent tabular-nums">{String(active + 1).padStart(2, '0')}</span>
           <span>{stopYear(stops[active].id)}</span>
           <span>{stops[active].label}</span>
         </p>
       )}
 
-      <main>
-        <section id="desk" className="stop-section hero">
-          <div className="hero-copy">
-            <h1>{profile.name}</h1>
-            <p className="roles">{profile.roles.join(' · ')}</p>
-            <p className="lede">{profile.summary}</p>
-            <div className="actions">
+      <main className="simple:pb-16">
+        {/* Hero: the copy sits under the poster name, which the scene draws (its height arrives as --name-h). */}
+        <section
+          id="desk"
+          className={`${section} grid-cols-[minmax(0,36rem)_1fr] items-start pt-[calc(76px+var(--name-h,0px)+2rem)] pb-[12vh] compact:pt-[calc(76px+var(--name-h,0px)+1.25rem)] compact:pb-[12svh] simple:pt-24 simple:pb-10`}
+        >
+          <div className="pointer-events-auto">
+            {/* Desk view: the scene shows the name, so the heading stays for screen readers only. */}
+            <h1 className="font-display text-[length:clamp(2.75rem,7vw,6.5rem)] leading-[0.9] tracking-[-0.02em] uppercase desk:sr-only compact:text-[length:clamp(2.5rem,13vw,4rem)]">
+              {profile.name}
+            </h1>
+            <p className="mt-5 text-lg font-semibold">
+              {/* The separator ends each role and stays with it, so a line never starts with a lone dot. */}
+              {profile.roles.map((r, i) => (
+                <Fragment key={r}>
+                  {i > 0 && ' '}
+                  <span className="whitespace-nowrap">{i < profile.roles.length - 1 ? `${r} ·` : r}</span>
+                </Fragment>
+              ))}
+            </p>
+            <p className="mt-3 max-w-[44ch]">{profile.summary}</p>
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
               <a className="btn" href="#bantay">
                 Start the tour
               </a>
-              <a className="btn btn-quiet" href={`mailto:${profile.email}`}>
+              <a
+                className="inline-block text-sm font-semibold tracking-[0.08em] uppercase decoration-1 hover:decoration-accent"
+                href={`mailto:${profile.email}`}
+              >
                 Email me
               </a>
             </div>
-            <p className="hint" aria-hidden="true">
+            <p className="mt-6 text-sm text-muted compact:hidden simple:hidden" aria-hidden="true">
               Scroll, or click anything on the desk.
             </p>
           </div>
         </section>
 
         {projects.map((p) => (
-          <section key={p.id} id={p.id} className="stop-section">
+          <section key={p.id} id={p.id} className={stopSection}>
             <ProjectSheet p={p} />
           </section>
         ))}
 
-        <section id="skills" className="stop-section">
-          <article className="sheet">
-            <h2>Skills</h2>
-            <div className="skills">
+        <section id="skills" className={stopSection}>
+          <article className={sheet}>
+            <h2 className={h2}>Skills</h2>
+            <div className="mt-7 flex flex-col gap-7">
               {skills.map((g) => (
                 <section key={g.group} aria-labelledby={`skills-${g.group}`}>
-                  <h3 id={`skills-${g.group}`}>{g.group}</h3>
-                  <ul className="tags" aria-label={`${g.group}, core`}>
+                  <h3 id={`skills-${g.group}`} className={h3}>
+                    {g.group}
+                  </h3>
+                  {/* Core skills are framed tags; the rest is quieter text. */}
+                  <ul className={`${tags} mt-[0.6rem]`} aria-label={`${g.group}, core`}>
                     {g.core.map((i) => (
-                      <li key={i}>{i}</li>
+                      <li key={i} className="frame px-[0.7rem] py-2 text-[0.8125rem]">
+                        {i}
+                      </li>
                     ))}
                   </ul>
-                  <p className="more">
-                    <span>Also:</span> {g.more.join(', ')}
+                  <p className="mt-[0.7rem] text-[0.9375rem] text-muted">
+                    <span className="font-semibold text-white">Also:</span> {g.more.join(', ')}
                   </p>
                 </section>
               ))}
@@ -190,26 +253,28 @@ export default function App() {
           </article>
         </section>
 
-        <section id="contact" className="stop-section">
-          <article className="sheet">
-            <h2>Let’s talk</h2>
-            <p>
+        <section id="contact" className={stopSection}>
+          <article className={sheet}>
+            <h2 className={h2}>Let’s talk</h2>
+            <p className="mt-4">
               {profile.location}. {profile.remote}.
             </p>
-            <ul className="contact">
-              <li>
-                <a href={`mailto:${profile.email}`}>{profile.email}</a>
-              </li>
-              <li>
-                <a href={profile.linkedin} target="_blank" rel="noreferrer">
-                  LinkedIn
-                </a>
-              </li>
-              <li>
-                <a href={profile.github} target="_blank" rel="noreferrer">
-                  GitHub
-                </a>
-              </li>
+            <ul className="mt-6 mb-8 flex flex-col gap-[0.4rem] text-[length:clamp(1.125rem,1.6vw,1.375rem)] font-semibold">
+              {[
+                { href: `mailto:${profile.email}`, label: profile.email },
+                { href: profile.linkedin, label: 'LinkedIn', external: true },
+                { href: profile.github, label: 'GitHub', external: true },
+              ].map((c) => (
+                <li key={c.label}>
+                  <a
+                    href={c.href}
+                    className="hover:decoration-accent hover:decoration-2"
+                    {...(c.external && { target: '_blank', rel: 'noreferrer' })}
+                  >
+                    {c.label}
+                  </a>
+                </li>
+              ))}
             </ul>
             {profile.cv && (
               <a className="btn" href={profile.cv} download>
