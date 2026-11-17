@@ -25,6 +25,7 @@ export type Project = {
   stack: string[]
   shots: { src: string; alt: string; caption: string; width: number; height: number }[]
   team?: string
+  award?: string
   link?: { href: string; label: string }
 }
 
@@ -46,6 +47,24 @@ export const projects: Project[] = [
       { src: '/projects/bantay/hotspot-map.png', width: 1674, height: 526, alt: 'Hotspot map of incidents around Angeles City', caption: 'Where incidents are reported.' },
     ],
     team: 'With Jonnard Enzo Santos, Art Elvin Miranda and De Andre Antonio Williams · Adviser Dr. Joey S. Aviles · Built for Barangay Anunas, Angeles City',
+  },
+  {
+    id: 'avail',
+    name: 'avail',
+    title: 'Filling a private resort’s empty days through Facebook and Messenger',
+    period: 'Hackathon · Build-Off: Business Edition 2026 · Sales and Marketing Solutions',
+    award: 'Champion',
+    summary:
+      'Small private pool resorts sit empty on weekdays, and guests who message the page often wait hours for a price. avail lets the owner tap the empty days on a calendar and get a ready Facebook post with a perk instead of a discount. When a guest messages, it reads the Taglish message, works out the exact price from the owner’s own price list, and saves the day until the GCash downpayment comes in. The AI reads and writes; code does the math; the owner confirms.',
+    stack: ['JavaScript', 'PWA', 'n8n', 'Groq (gpt-oss-120b)', 'Google Sheets', 'Google Apps Script', 'Messenger Platform', 'Meta Pages API', 'ntfy', 'Node.js test runner'],
+    shots: [
+      { src: '/projects/avail/calendar.png', width: 780, height: 1688, alt: 'avail owner app calendar for November 2026 with booked, saved and empty days and a GCash downpayment waiting to be confirmed', caption: 'The owner’s calendar: booked, saved and empty days.' },
+      { src: '/projects/avail/pick.png', width: 780, height: 1688, alt: 'Two empty weekdays picked on the avail calendar, with a Draft post button', caption: 'Tap the empty days to promote.' },
+      { src: '/projects/avail/post.png', width: 780, height: 1688, alt: 'avail drafts a Taglish Facebook post offering free breakfast on the picked days at the regular ₱7,000 price', caption: 'A ready Facebook post, with a perk instead of a discount.' },
+      { src: '/projects/avail/confirm.png', width: 780, height: 1688, alt: 'avail booking details for a guest who sent a ₱5,000 GCash downpayment, with Confirm booking, Not yet and Release the day buttons', caption: 'The owner checks GCash and confirms with one tap.' },
+    ],
+    team: 'Build-Off: Business Edition 2026, Sales and Marketing Solutions track · Prices are the partner resort’s real rates; bookings and names are sample data',
+    link: { href: 'https://github.com/iamstrix/avail', label: 'View the code on GitHub' },
   },
   {
     id: 'tanaw',
@@ -123,6 +142,7 @@ export const skills = [
 export const stops = [
   { id: 'desk', label: 'Desk' },
   { id: 'bantay', label: 'BANTAY' },
+  { id: 'avail', label: 'avail' },
   { id: 'tanaw', label: 'TANAW' },
   { id: 'laredo', label: '24/7 Laredo' },
   { id: 'brewview', label: 'BrewView' },

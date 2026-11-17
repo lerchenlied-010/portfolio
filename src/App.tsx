@@ -43,9 +43,45 @@ const h2 = 'font-display text-[length:clamp(2rem,3.4vw,3rem)] leading-[0.95] tra
 const h3 = 'text-lg leading-[1.3] font-semibold'
 const tags = 'flex flex-wrap gap-1.5'
 
+type Shot = Project['shots'][number]
+
+// Full-size screenshot in a native modal <dialog>: Esc, the close button or a click outside the image closes it.
+function Lightbox({ shot, onClose }: { shot: Shot | null; onClose: () => void }) {
+  const ref = useRef<HTMLDialogElement>(null)
+  useEffect(() => {
+    if (shot) ref.current?.showModal()
+  }, [shot])
+  return (
+    <dialog
+      ref={ref}
+      onClose={onClose}
+      onClick={(e) => e.target === e.currentTarget && ref.current?.close()}
+      aria-label={shot?.caption}
+      className="m-auto max-h-none max-w-none bg-transparent p-0 text-white backdrop:bg-black/85 backdrop:backdrop-blur-sm"
+    >
+      {shot && (
+        <figure className="flex flex-col items-center gap-3 p-4">
+          <img src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} className="block h-auto max-h-[85svh] w-auto max-w-[92vw] rounded-[2px] bg-[#f2f2f2] object-contain" />
+          <figcaption className="flex w-full items-center justify-between gap-4 text-sm text-muted">
+            {shot.caption}
+            <button type="button" className="btn" onClick={() => ref.current?.close()} autoFocus>
+              Close
+            </button>
+          </figcaption>
+        </figure>
+      )}
+    </dialog>
+  )
+}
+
 function ProjectSheet({ p }: { p: Project }) {
+  const [open, setOpen] = useState<Shot | null>(null)
   return (
     <article className={sheet}>
+      <Lightbox shot={open} onClose={() => setOpen(null)} />
+      {p.award && (
+        <p className="mb-3 inline-block bg-accent px-[0.6rem] py-[0.3rem] text-xs font-semibold tracking-[0.12em] text-white uppercase">{p.award}</p>
+      )}
       <h2 className={h2}>{p.name}</h2>
       <p className="mt-2 text-lg font-medium">{p.title}</p>
       <p className="mt-[0.6rem] text-sm text-muted">{p.period}</p>
@@ -65,7 +101,20 @@ function ProjectSheet({ p }: { p: Project }) {
       <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(min(8.5rem,100%),1fr))] items-start gap-x-4 gap-y-6">
         {p.shots.map((s) => (
           <figure key={s.src} className={s.height > s.width ? undefined : 'col-span-full'}>
-            <a href={s.src} target="_blank" rel="noreferrer" aria-label={`Open full size: ${s.caption}`} className="group block rounded-[2px]">
+            {/* Plain click opens the lightbox; Ctrl/Cmd/middle-click still opens the file in a new tab. */}
+            <a
+              href={s.src}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Open full size: ${s.caption}`}
+              aria-haspopup="dialog"
+              className="group block rounded-[2px]"
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+                e.preventDefault()
+                setOpen(s)
+              }}
+            >
               <img
                 src={s.src}
                 alt={s.alt}

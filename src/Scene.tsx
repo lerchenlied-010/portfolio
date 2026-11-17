@@ -30,6 +30,7 @@ type Pose = { pos: V3; look: V3; off: number; offP: number; posP?: V3 }
 const POSES: Record<StopId, Pose> = {
   desk: { pos: [0.2, 1.36, 1.56], look: [0.16, 0, 0.1], off: -0.17, offP: -0.5, posP: [0.12, 3.3, 1.5] },
   bantay: { pos: [0.42, 0.6, 0.58], look: [0.3, 0.07, -0.2], off: 0.2, offP: 0.1, posP: [0.42, 1.2, 1.05] },
+  avail: { pos: [-0.38, 0.5, 0.13], look: [-0.48, 0, -0.22], off: 0.2, offP: 0.12, posP: [-0.42, 1.05, 0.3] },
   tanaw: { pos: [-0.2, 0.5, 0.45], look: [-0.3, 0, 0.1], off: 0.2, offP: 0.12, posP: [-0.22, 1.05, 0.62] },
   laredo: { pos: [0.12, 0.62, 0.3], look: [-0.04, 0, -0.26], off: 0.2, offP: 0.12, posP: [0.1, 1.15, 0.5] },
   brewview: { pos: [0.5, 0.42, 0.18], look: [0.6, 0.06, -0.3], off: 0.2, offP: 0.12, posP: [0.55, 0.95, 0.35] },
@@ -421,6 +422,47 @@ function Phone({ m }: { m: Mats }) {
           <planeGeometry args={[0.048 - i * 0.008, 0.0014]} />
         </mesh>
       ))}
+    </group>
+  )
+}
+
+// Printed month card for avail: navy header, a 7×5 day grid with booked (navy), picked (pink) and saved (amber) days,
+// and a red CHAMPION ribbon across the corner for the Build-Off win.
+const AVAIL_DAYS: Record<number, string> = { 6: '#1b2c6b', 13: '#1b2c6b', 20: '#1b2c6b', 21: '#f5c869', 22: '#d8286f', 23: '#d8286f', 24: '#f5c869' }
+function MonthCard({ m }: { m: Mats }) {
+  const w = 0.15
+  const d = 0.18
+  const flat = [-Math.PI / 2, 0, 0] as const
+  const y = 0.0026
+  const cell = 0.0172
+  const x0 = -w / 2 + 0.012 + cell / 2
+  const z0 = -d / 2 + 0.06
+  return (
+    <group>
+      <mesh position={[0, 0.0012, 0]} material={m.paper} castShadow receiveShadow>
+        <boxGeometry args={[w, 0.0024, d]} />
+      </mesh>
+      <mesh position={[0, y, -d / 2 + 0.022]} rotation={flat}>
+        <planeGeometry args={[w, 0.044]} />
+        <meshBasicMaterial color="#1b2c6b" />
+      </mesh>
+      <Text font={nameFontUrl} fontSize={0.019} color="#ffffff" anchorX="left" anchorY="middle" rotation={flat} position={[-w / 2 + 0.012, y + 0.0002, -d / 2 + 0.022]}>
+        avail
+      </Text>
+      {Array.from({ length: 35 }).map((_, i) => (
+        <mesh key={i} position={[x0 + (i % 7) * (cell + 0.0005), y, z0 + Math.floor(i / 7) * (cell + 0.004)]} rotation={flat}>
+          <planeGeometry args={[cell - 0.002, cell + 0.001]} />
+          <meshBasicMaterial color={AVAIL_DAYS[i] ?? '#dcdde3'} />
+        </mesh>
+      ))}
+      <group position={[w / 2 - 0.03, y + 0.0004, d / 2 - 0.016]} rotation={[0, 0.12, 0]}>
+        <mesh rotation={flat} material={m.accent}>
+          <planeGeometry args={[0.07, 0.016]} />
+        </mesh>
+        <Text font={fontUrl} fontSize={0.0068} letterSpacing={0.12} color="#ffffff" anchorX="center" anchorY="middle" rotation={flat} position={[0, 0.0002, 0]}>
+          CHAMPION
+        </Text>
+      </group>
     </group>
   )
 }
@@ -866,6 +908,9 @@ function Desk({ active, onSelect, reducedMotion }: { active: number; onSelect: (
       <group position={[0, 0.005, 0]}>
         <Hotspot id="bantay" active={is('bantay')} onSelect={onSelect} position={[0.3, 0, -0.22]} rotation={[0, -0.14, 0]}>
           <Laptop m={m} />
+        </Hotspot>
+        <Hotspot id="avail" active={is('avail')} onSelect={onSelect} position={[-0.48, 0, -0.22]} rotation={[0, 0.25, 0]}>
+          <MonthCard m={m} />
         </Hotspot>
         <Hotspot id="tanaw" active={is('tanaw')} onSelect={onSelect} position={[-0.3, 0, 0.1]} rotation={[0, 0.4, 0]}>
           <Phone m={m} />

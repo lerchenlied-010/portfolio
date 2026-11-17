@@ -56,6 +56,11 @@
     caret-color: var(--color-accent);
   }
 
+  /* Freeze the tour while a screenshot is open. */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
   body {
     background: var(--color-black);
   }

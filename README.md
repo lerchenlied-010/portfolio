@@ -1,6 +1,6 @@
 # Rastafari Khaliel Sarzona · Portfolio
 
-An interactive portfolio set on a 3D desk. Each object on the desk is a project or a section: open the laptop for BANTAY, the phone for TANAW, the newspaper for 24/7 Laredo, the coffee bag for BrewView, the index-card box for skills, and the envelope for contact details. Scroll to take the tour, or click any object to jump to it.
+An interactive portfolio set on a 3D desk. Each object on the desk is a project or a section: open the laptop for BANTAY, the month card for avail, the phone for TANAW, the newspaper for 24/7 Laredo, the coffee bag for BrewView, the index-card box for skills, and the envelope for contact details. Scroll to take the tour, or click any object to jump to it.
 
 **Live site:** _add your Vercel URL here_
 
@@ -18,6 +18,7 @@ An interactive portfolio set on a 3D desk. Each object on the desk is a project 
 | Project | What it is |
 |---|---|
 | BANTAY | Thesis project that turns handwritten barangay blotter records into classified, searchable records. |
+| avail | Build-Off: Business Edition 2026 Champion. Fills a private resort's empty days with Facebook promos and answers Messenger guests with exact prices. |
 | TANAW | Meralco IDOL Hackathon 2026 app that explains in pesos why an electricity bill changed and helps dispute errors. |
 | 24/7 Laredo | Freelance build of a 14-page local news website on GoHighLevel. |
 | BrewView | Coffee review website that sorts customer reviews into positive, neutral or negative. |
