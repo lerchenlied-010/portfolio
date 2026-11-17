@@ -64,7 +64,7 @@ export const projects: Project[] = [
       { src: '/projects/avail/confirm.png', width: 780, height: 1688, alt: 'avail booking details for a guest who sent a ₱5,000 GCash downpayment, with Confirm booking, Not yet and Release the day buttons', caption: 'The owner checks GCash and confirms with one tap.' },
     ],
     team: 'Build-Off: Business Edition 2026, Sales and Marketing Solutions track · Prices are the partner resort’s real rates; bookings and names are sample data',
-    link: { href: 'https://github.com/iamstrix/avail', label: 'View the code on GitHub' },
+    link: { href: 'https://github.com/lerchenlied-010/avail', label: 'View the code on GitHub' },
   },
   {
     id: 'tanaw',
